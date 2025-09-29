@@ -19,6 +19,48 @@ interface Project {
   media: ProjectMedia[];
 }
 
+// --- Custom Hook for Dark Mode ---
+const useDarkMode = (): [string, () => void] => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  return [theme, toggleTheme];
+};
+
+// --- Theme Toggle Component ---
+const ThemeToggle: React.FC<{ theme: string; toggleTheme: () => void }> = ({ theme, toggleTheme }) => {
+  return (
+    <button
+      onClick={toggleTheme}
+      className="p-2 rounded-full transition-colors duration-300 ease-in-out text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+      aria-label="Toggle dark mode"
+    >
+      {theme === 'light' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      )}
+    </button>
+  );
+};
+
 // --- Data for Projects (Single Source of Truth) ---
 const projects: Project[] = [
   {
@@ -146,21 +188,21 @@ const HomePage: React.FC<{ setView: (view: View) => void; projects: Project[] }>
 const ContactPage: React.FC = () => (
   <div className="flex flex-col items-center justify-center text-center">
     <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center -z-10">
-      <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-gray-200">Dawn</h1>
+      <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-gray-200 dark:text-gray-800">Dawn</h1>
       <div className="w-8 h-8 my-4 md:my-0 md:mx-8"></div>
-      <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-gray-200">Philip</h1>
+      <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-gray-200 dark:text-gray-800">Philip</h1>
     </div>
-    <a href="tel:+919539696530" className="text-2xl md:text-4xl font-bold text-red-500 hover:text-red-700 transition-colors duration-300 ease-in-out mb-4">
+    <a href="tel:+919539696530" className="text-2xl md:text-4xl font-bold text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300 ease-in-out mb-4">
       +91 95396 96530
     </a>
-    <a href="mailto:dawnphilip.inc@gmail.com" className="text-2xl md:text-4xl font-bold text-red-500 hover:text-red-700 transition-colors duration-300 ease-in-out mb-4">
+    <a href="mailto:dawnphilip.inc@gmail.com" className="text-2xl md:text-4xl font-bold text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300 ease-in-out mb-4">
       dawnphilip.inc@gmail.com
     </a>
     <a 
       href="https://www.linkedin.com/in/dawnphilip/" 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="text-2xl md:text-4xl font-bold text-red-500 hover:text-red-700 transition-colors duration-300 ease-in-out"
+      className="text-2xl md:text-4xl font-bold text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-300 ease-in-out"
     >
       LinkedIn
     </a>
@@ -168,7 +210,7 @@ const ContactPage: React.FC = () => (
 );
 
 const Rating: React.FC<{ score: number }> = ({ score }) => (
-  <div className="flex text-red-500 text-lg">
+  <div className="flex text-red-500 dark:text-red-400 text-lg">
     {[...Array(5)].map((_, i) => (
       <span key={i} className={i < score ? 'opacity-100' : 'opacity-30'}>●</span>
     ))}
@@ -179,18 +221,18 @@ const Rating: React.FC<{ score: number }> = ({ score }) => (
  * Renders the full, SEO-friendly resume.
  */
 const ResumePage: React.FC = () => (
-  <div className="w-full max-w-5xl mx-auto text-gray-800 text-sm animate-fade-in">
+  <div className="w-full max-w-5xl mx-auto text-gray-800 dark:text-gray-200 text-sm animate-fade-in">
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div className="md:col-span-1 space-y-8">
         <section>
-          <h2 className="font-bold text-lg border-b border-gray-300 pb-1 mb-2">EDUCATION</h2>
+          <h2 className="font-bold text-lg border-b border-gray-300 dark:border-gray-600 pb-1 mb-2">EDUCATION</h2>
           <p className="font-bold">St. Xavier’s College, Mumbai</p>
           <p>BA Mass Communication and Journalism</p>
           <p>8.92 CGPA</p>
           <p>2020-2023</p>
         </section>
         <section>
-          <h2 className="font-bold text-lg border-b border-gray-300 pb-1 mb-2">CERTIFICATION</h2>
+          <h2 className="font-bold text-lg border-b border-gray-300 dark:border-gray-600 pb-1 mb-2">CERTIFICATION</h2>
           <p className="font-bold">Google Ads Creative</p>
           <p>Google</p>
           <p>2023</p>
@@ -198,7 +240,7 @@ const ResumePage: React.FC = () => (
       </div>
       <div className="md:col-span-2 space-y-8">
         <section>
-          <h2 className="font-bold text-lg border-b border-gray-300 pb-1 mb-2">WORK EXPERIENCE</h2>
+          <h2 className="font-bold text-lg border-b border-gray-300 dark:border-gray-600 pb-1 mb-2">WORK EXPERIENCE</h2>
           <div className="space-y-4">
             <div>
               <p className="font-bold">Radio Mango ( Malayala Manorama )</p>
@@ -237,14 +279,14 @@ const ResumePage: React.FC = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
       <div className="md:col-span-1 space-y-8">
         <section>
-          <h2 className="font-bold text-lg border-b border-gray-300 pb-1 mb-2">ABOUT</h2>
+          <h2 className="font-bold text-lg border-b border-gray-300 dark:border-gray-600 pb-1 mb-2">ABOUT</h2>
           <p>I'm a Mass Media graduate with a profound passion for visual storytelling, actively seeking opportunities in motion graphics and content creation.</p>
         </section>
       </div>
       <div className="md:col-span-2 space-y-8">
         <div className="grid grid-cols-2 gap-8">
           <section>
-            <h2 className="font-bold text-lg border-b border-gray-300 pb-1 mb-2">SKILLS</h2>
+            <h2 className="font-bold text-lg border-b border-gray-300 dark:border-gray-600 pb-1 mb-2">SKILLS</h2>
             <ul className="space-y-1">
               <li>Adobe After Effects</li>
               <li>Adobe Premier Pro</li>
@@ -255,7 +297,7 @@ const ResumePage: React.FC = () => (
             </ul>
           </section>
           <section>
-            <h2 className="font-bold text-lg border-b border-gray-300 pb-1 mb-2">SOFTWARE</h2>
+            <h2 className="font-bold text-lg border-b border-gray-300 dark:border-gray-600 pb-1 mb-2">SOFTWARE</h2>
             <ul className="space-y-2">
               <li className="flex justify-between items-center"><span>Illustrator</span> <Rating score={5} /></li>
               <li className="flex justify-between items-center"><span>Photoshop</span> <Rating score={4} /></li>
@@ -295,10 +337,10 @@ const WorkItem: React.FC<{
   };
   
   return (
-    <div className="border-b border-black last:border-b-0">
+    <div className="border-b border-black dark:border-white last:border-b-0">
       <div onClick={onToggle} className="cursor-pointer flex justify-between items-center py-8">
         <h2 className="text-3xl md:text-5xl font-black tracking-tighter">{project.title}</h2>
-        <div className="text-right text-xs md:text-base text-gray-600">
+        <div className="text-right text-xs md:text-base text-gray-600 dark:text-gray-400">
           {project.tags.map((tag, index) => (
             <React.Fragment key={tag}>
               <button
@@ -306,7 +348,7 @@ const WorkItem: React.FC<{
                   e.stopPropagation();
                   onTagClick(tag);
                 }}
-                className={`hover:text-black transition-colors duration-200 ease-in-out ${activeTag === tag ? 'font-bold text-black' : ''}`}
+                className={`hover:text-black dark:hover:text-white transition-colors duration-200 ease-in-out ${activeTag === tag ? 'font-bold text-black dark:text-white' : ''}`}
               >
                 {tag}
               </button>
@@ -349,8 +391,8 @@ const WorkPage: React.FC = () => {
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto text-gray-800 animate-fade-in">
-            <div className="border-t border-black">
+        <div className="w-full max-w-5xl mx-auto text-gray-800 dark:text-gray-200 animate-fade-in">
+            <div className="border-t border-black dark:border-white">
                 {filteredProjects.map(project => (
                     <WorkItem
                         key={project.id}
@@ -372,13 +414,14 @@ const WorkPage: React.FC = () => {
  */
 const App: React.FC = () => {
   const [view, setView] = useState<View>('home');
+  const [theme, toggleTheme] = useDarkMode();
 
   const NavButton: React.FC<{ targetView: View; children: React.ReactNode }> = ({ targetView, children }) => {
     const isInactive = view !== 'home' && view !== targetView;
     return (
       <button
         onClick={() => setView(targetView)}
-        className={`text-xl md:text-2xl font-bold tracking-tight transition-colors duration-300 ease-in-out ${isInactive ? 'text-gray-400 hover:text-gray-600' : 'text-black hover:text-gray-600'}`}
+        className={`text-xl md:text-2xl font-bold tracking-tight transition-colors duration-300 ease-in-out ${isInactive ? 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400' : 'text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400'}`}
       >
         {children}
       </button>
@@ -386,7 +429,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-white text-black font-sans min-h-screen antialiased">
+    <div className="bg-white text-black dark:bg-black dark:text-white font-sans min-h-screen antialiased">
       <style>{`
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(10px); }
@@ -399,22 +442,23 @@ const App: React.FC = () => {
       `}</style>
 
       {/* Header Navigation */}
-      <header className="fixed top-0 left-0 right-0 p-8 z-10 bg-white">
+      <header className="fixed top-0 left-0 right-0 p-8 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-sm">
         <nav className="flex justify-between items-center w-full max-w-screen-xl mx-auto">
-          <div className="flex-1 flex justify-start">
+          <div className="flex-1 flex justify-start items-center gap-4">
             <NavButton targetView="contact">Contact</NavButton>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
           <div className="flex-1 flex justify-center">
             <button
                 onClick={() => setView('home')}
-                className="text-3xl md:text-5xl font-nav-brand font-bold tracking-tight text-black hover:text-gray-600 transition-colors duration-300 ease-in-out"
+                className="text-3xl md:text-5xl font-nav-brand font-bold tracking-tight text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300 ease-in-out"
             >
                 dawn philip
             </button>
           </div>
           <div className="flex-1 flex justify-end flex-col items-end md:flex-row md:items-center md:space-x-2">
             <NavButton targetView="work">Work</NavButton>
-            <span className="hidden md:inline text-xl md:text-2xl font-bold text-gray-400">,</span>
+            <span className="hidden md:inline text-xl md:text-2xl font-bold text-gray-400 dark:text-gray-500">,</span>
             <NavButton targetView="resume">Resume</NavButton>
           </div>
         </nav>
