@@ -23,11 +23,11 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    title: 'ഒരു song, ഇരു vibe',
+    title: 'ഒരു song, ഇരു vibe',
     tags: ['Motion Graphics', 'Illustration'],
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    description:  "This motion graphics element is designed as a powerful visual metaphor for how music's meaning can be transformed.",
     media: [
-      { type: 'color', value: 'bg-red-500', alt: 'Red background placeholder', width: 'w-48 h-48 md:w-64 md:h-64', height: '' }
+      { type: 'gif', value: 'https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif', alt: 'Abstract motion graphic', width: 'w-64 h-48 md:w-80 md:h-64', height: '' }
     ],
   },
   {
@@ -54,7 +54,7 @@ const projects: Project[] = [
     tags: ['Photography', 'Marketing campaign'],
     description: 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.',
     media: [
-      { type: 'gif', value: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2ZsczBqczE1ZHQ1M2N5ZG45dTJzM3EzbTFjZ2FocGlpYm80Z2g5NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKS6AWgP3Qv3tq8/giphy.gif', alt: 'Work 4 sample image', width: 'w-64 h-48 md:w-80 md:h-64', height: '' }
+      { type: 'gif', value: 'https://media.giphy.com/media/l41lI4bYmcsPJX9Go/giphy.gif', alt: 'Abstract swirling animation', width: 'w-64 h-48 md:w-80 md:h-64', height: '' }
     ],
   },
 ];
